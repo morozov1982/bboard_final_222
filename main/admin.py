@@ -2,8 +2,9 @@ import datetime
 
 from django.contrib import admin
 
-from .models import AdvUser
+from .models import AdvUser, SubRubric, SuperRubric, Bb, AdditionalImage
 from .utilities import send_activation_notification
+from .forms import SubRubricForm
 
 
 def send_activation_notifications(modeladmin, request, queryset):
@@ -47,11 +48,37 @@ class AdvUserAdmin(admin.ModelAdmin):
     search_fields = ('username', 'email', 'first_name', 'last_name')
     list_filter = (NonactivatedFilter,)
     fields = (('username', 'email'), ('first_name', 'last_name'),
-              ('send-messages', 'is_active', 'is_activated'),
+              ('send_messages', 'is_active', 'is_activated'),
               ('is_staff', 'is_superuser'), 'groups', 'user_permissions',
               ('last_login', 'date_joined'))
     readonly_fields = ('last_login', 'date_joined')
     actions = (send_activation_notifications,)
 
 
+class SubRubricInline(admin.TabularInline):
+    model = SubRubric
+
+
+class SuperRubricAdmin(admin.ModelAdmin):
+    exclude = ('super_rubric',)
+    inlines = (SubRubricInline,)
+
+
+class SubRubricAdmin(admin.ModelAdmin):
+    form = SubRubricForm
+
+
+class AdditionalImageInline(admin.TabularInline):
+    model = AdditionalImage
+
+
+class BbAdmin(admin.ModelAdmin):
+    list_display = ('rubric', 'title', 'content', 'author', 'created_at')
+    fields = (('rubric', 'author'), 'title', 'content', 'price', 'contacts', 'image', 'is_active')
+    inlines = (AdditionalImageInline,)
+
+
 admin.site.register(AdvUser, AdvUserAdmin)
+admin.site.register(SuperRubric, SuperRubricAdmin)
+admin.site.register(SubRubric, SubRubricAdmin)
+admin.site.register(Bb, BbAdmin)
