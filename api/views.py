@@ -1,11 +1,9 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view
 from rest_framework.generics import RetrieveAPIView
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 
-from main.models import Bb, Comment
-from .serializers import BbSerializer, BbDetailSerializer, CommentSerializer
+from main.models import Bb
+from .serializers import BbSerializer, BbDetailSerializer
 
 
 @api_view(['GET'])
@@ -21,6 +19,13 @@ class BbDetailView(RetrieveAPIView):
     serializer_class = BbDetailSerializer
 
 
+from rest_framework.decorators import permission_classes
+from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+
+from main.models import Comment
+from .serializers import CommentSerializer
+
 @api_view(['GET', 'POST'])
 @permission_classes((IsAuthenticatedOrReadOnly,))
 def comments(request, pk):
@@ -30,7 +35,8 @@ def comments(request, pk):
             serializer.save()
             return Response(serializer.data, status=HTTP_201_CREATED)
         else:
-            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors,
+                            status=HTTP_400_BAD_REQUEST)
     else:
         comments = Comment.objects.filter(is_active=True, bb=pk)
         serializer = CommentSerializer(comments, many=True)

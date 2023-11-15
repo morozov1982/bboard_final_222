@@ -12,7 +12,8 @@ class BbSerializer(serializers.ModelSerializer):
 class BbDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bb
-        fields = ('id', 'title', 'content', 'price', 'created_at', 'contacts', 'image')
+        fields = ('id', 'title', 'content', 'price', 'created_at',
+                  'contacts', 'image')
 
 
 class CommentSerializer(serializers.ModelSerializer):

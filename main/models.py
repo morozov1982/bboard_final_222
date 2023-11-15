@@ -1,6 +1,6 @@
-from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models.signals import post_save
+from django.contrib.auth.models import AbstractUser
 
 from .utilities import get_timestamp_path, send_new_comment_notification
 
@@ -23,9 +23,11 @@ class AdvUser(AbstractUser):
 class Rubric(models.Model):
     name = models.CharField(max_length=20, db_index=True, unique=True,
                             verbose_name='Название')
-    order = models.SmallIntegerField(default=0, db_index=True, verbose_name='Порядок')
-    super_rubric = models.ForeignKey('SuperRubric', on_delete=models.PROTECT, null=True,
-                                     blank=True, verbose_name='Надрубрика')
+    order = models.SmallIntegerField(default=0, db_index=True,
+                                     verbose_name='Порядок')
+    super_rubric = models.ForeignKey('SuperRubric',
+                                     on_delete=models.PROTECT, null=True, blank=True,
+                                     verbose_name='Надрубрика')
 
 
 class SuperRubricManager(models.Manager):
@@ -55,11 +57,12 @@ class SubRubric(Rubric):
     objects = SubRubricManager()
 
     def __str__(self):
-        return f'{self.super_rubric.name} - {self.name}'
+        return '%s - %s' % (self.super_rubric.name, self.name)
 
     class Meta:
         proxy = True
-        ordering = ('super_rubric__order', 'super_rubric__name', 'order', 'name')
+        ordering = ('super_rubric__order', 'super_rubric__name', 'order',
+                    'name')
         verbose_name = 'Подрубрика'
         verbose_name_plural = 'Подрубрики'
 
@@ -80,9 +83,6 @@ class Bb(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True,
                                       verbose_name='Опубликовано')
 
-    def __str__(self):
-        return f'{self.rubric.name}: {self.title}'
-
     def delete(self, *args, **kwargs):
         for ai in self.additionalimage_set.all():
             ai.delete()
@@ -99,9 +99,6 @@ class AdditionalImage(models.Model):
                            verbose_name='Объявление')
     image = models.ImageField(upload_to=get_timestamp_path,
                               verbose_name='Изображение')
-
-    def __str__(self):
-        return f'{self.bb.title}'
 
     class Meta:
         verbose_name_plural = 'Дополнительные иллюстрации'

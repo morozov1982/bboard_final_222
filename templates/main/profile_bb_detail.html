@@ -1,8 +1,6 @@
 {% extends "layout/basic.html" %}
 
-{% load bootstrap4 %}
-
-{% block title %}{{ bb.title }} - {{ bb.rubric.name }}{% endblock %}
+{% block title %}{{ bb.title }} - Профиль пользователя{% endblock %}
 
 {% block content %}
     <div class="container-fluid mt-3">
@@ -16,8 +14,7 @@
                 <p>{{ bb.content }}</p>
                 <p class="font-weight-bold">{{ bb.price }} руб.</p>
                 <p>{{ bb.contacts }}</p>
-                <p class="text-right font-italic">Добавлено
-                    {{ bb.created_at }}</p>
+                <p class="text-right font-italic">Добавлено {{ bb.created_at }}</p>
             </div>
         </div>
     </div>
@@ -30,23 +27,16 @@
             {% endfor %}
         </div>
     {% endif %}
-    <p><a href="{% url 'main:by_rubric' pk=bb.rubric.pk %}{{ all }}">
-        Назад</a></p>
-    <h4 class="mt-5">Новый комментарий</h4>
-    <form method="post">
-        {% csrf_token %}
-        {% bootstrap_form form layout='horizontal' %}
-        {% buttons submit='Добавить' %}{% endbuttons %}
-    </form>
+    <p><a href="{% url 'main:profile' %}">Назад</a></p>
     {% if comments %}
-    <div class="mt-5">
-        {% for comment in comments %}
-        <div class="my-2 p-2 border">
-            <h5>{{ comment.author }}</h5>
-            <p>{{ comment.content }}</p>
-            <p class="text-right font-italic">{{ comment.created_at }}</p>
+        <div class="mt-5">
+            {% for comment in comments %}
+                <div class="my-2 p-2 border">
+                    <h5>{{ comment.author }}</h5>
+                    <p>{{ comment.content }}</p>
+                    <p class="text-right font-italic">{{ comment.created_at }}</p>
+                </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-    </div>
     {% endif %}
 {% endblock %}
