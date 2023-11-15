@@ -9,6 +9,8 @@ django-simple-captcha==0.5.20
 djangorestframework==3.14.0
 easy-thumbnails==2.8.5
 Pillow==10.1.0
+psycopg2==2.9.9
+psycopg2-binary==2.9.9
 pytz==2023.3.post1
 soupsieve==2.5
 sqlparse==0.4.4
