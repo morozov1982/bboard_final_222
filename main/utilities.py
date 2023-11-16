@@ -4,7 +4,7 @@ from os.path import splitext
 from django.template.loader import render_to_string
 from django.core.signing import Signer
 
-from bboard.settings import ALLOWED_HOSTS
+from bboard_final.settings import ALLOWED_HOSTS
 
 signer = Signer()
 
